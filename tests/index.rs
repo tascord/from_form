@@ -65,6 +65,7 @@ mod tests {
         #[rename("handle")]
         username: Username,
         password: Password,
+        secret: String,
     }
 
     #[test]
@@ -73,6 +74,7 @@ mod tests {
         form_data.insert("email".to_string(), "imflo.pink@gmail.com".to_string());
         form_data.insert("handle".to_string(), "imflo".to_string());
         form_data.insert("password".to_string(), "password".to_string());
+        form_data.insert("secret".to_string(), "secret".to_string());
 
         let signup = Signup::try_from(form_data);
         assert!(signup.is_ok());

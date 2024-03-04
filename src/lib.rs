@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Data, DataStruct, DeriveInput, Field, Ident};
+use syn::{parse_macro_input, Data, DataStruct, DeriveInput, Ident};
 
 fn preamble(input: DeriveInput) -> (DeriveInput, Ident, DataStruct) {
     let name = input.clone().ident;
@@ -48,7 +48,7 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
                         #(
                             #field_names: #field_types::try_from(
                                 form_data.get(#form_names).ok_or_else(|| format!("{} not found", #form_names))?.to_string()
-                            )?,
+                            ).map_err(|e| format!("{:?}", e))?,
                         )*
                     }
                 )
