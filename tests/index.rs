@@ -81,4 +81,24 @@ mod tests {
 
         println!("{:?}", signup.unwrap());
     }
+
+    #[allow(dead_code)]
+    #[derive(FromForm, Debug)]
+    struct ComplexStruct {
+        field_1: Option<String>,
+        #[doc = "blah blah"]
+        field_2: Option<String>
+    }
+
+    #[test]
+    fn complex() {
+        let mut form_data = HashMap::<String,String>::new();
+        form_data.insert("field_1".to_string(), "abc".to_string());
+        form_data.insert("field_2".to_string(), "abc".to_string());
+
+        let signup = ComplexStruct::try_from(form_data);
+        assert!(signup.is_ok());
+
+        println!("{:?}", signup.unwrap());
+    }
 }

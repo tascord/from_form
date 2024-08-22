@@ -46,7 +46,7 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
                 Ok(
                     #name {
                         #(
-                            #field_names: #field_types::try_from(
+                            #field_names: <#field_types>::try_from(
                                 form_data.get(#form_names).ok_or_else(|| format!("{} not found", #form_names))?.to_string()
                             ).map_err(|e| format!("{:?}", e))?,
                         )*

@@ -1,6 +1,6 @@
 [package]
 name = "from_form"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 repository = "https://github.com/tascord/from_form"
 homepage = "https://github.com/tascord/from_form"
