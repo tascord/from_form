@@ -70,7 +70,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut form_data = HashMap::<String,String>::new();
+        let mut form_data = HashMap::<String, String>::new();
         form_data.insert("email".to_string(), "imflo.pink@gmail.com".to_string());
         form_data.insert("handle".to_string(), "imflo".to_string());
         form_data.insert("password".to_string(), "password".to_string());
@@ -87,12 +87,12 @@ mod tests {
     struct ComplexStruct {
         field_1: Option<String>,
         #[doc = "blah blah"]
-        field_2: Option<String>
+        field_2: Option<String>,
     }
 
     #[test]
     fn complex() {
-        let mut form_data = HashMap::<String,String>::new();
+        let mut form_data = HashMap::<String, String>::new();
         form_data.insert("field_1".to_string(), "abc".to_string());
         form_data.insert("field_2".to_string(), "abc".to_string());
 
@@ -101,6 +101,21 @@ mod tests {
 
         println!("{:?}", signup.unwrap());
     }
-    
 
+    #[derive(Debug)]
+    struct FStrType(i8);
+    impl std::str::FromStr for FStrType {
+        type Err = <i8 as std::str::FromStr>::Err;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            i8::from_str(s).map(FStrType)
+        }
+    }
+
+    #[allow(dead_code)]
+    #[derive(FromForm, Debug)]
+    struct StrTest {
+        #[from_str]
+        field: FStrType,
+    }
 }
