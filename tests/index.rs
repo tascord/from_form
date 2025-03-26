@@ -78,6 +78,7 @@ mod tests {
 
         let signup = Signup::try_from(form_data);
         assert!(signup.is_ok());
+        assert_eq!(Signup::len(), 4);
 
         println!("{:?}", signup.unwrap());
     }

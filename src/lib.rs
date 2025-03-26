@@ -10,6 +10,7 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
     let (_, name, data) = preamble(parse_macro_input!(input as DeriveInput));
 
     let fields = data.fields.into_iter();
+    let len = fields.len();
 
     // Standard (From<String>) impls
     let ss = filter_opts(fields.clone(), false, false);
@@ -32,6 +33,12 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
     let (nso_field, nso_name, nso_type) = collect(nso);
 
     let implimentation = quote! {
+        impl #name {
+            pub const fn len() -> usize {
+                return #len;
+            }
+        }
+
         impl TryFrom<std::collections::HashMap<String,String>> for #name {
             type Error = String;
             fn try_from(form_data: std::collections::HashMap<String,String>) -> Result<Self, Self::Error> {
