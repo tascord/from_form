@@ -51,3 +51,4 @@ let signup = Signup::try_from(form_data); // <- It works!
 
 ### Things of note
 - If your type impliments `FromStr` but not `TryFrom<String>`, use the `#[from_str]` attr on the field.
+- The columns of your struct are available through `T::COLUMNS`

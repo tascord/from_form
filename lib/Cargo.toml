@@ -1,0 +1,12 @@
+[package]
+name = "from_form"
+version = "0.2.0"
+edition = "2021"
+repository = "https://github.com/tascord/from_form"
+homepage = "https://github.com/tascord/from_form"
+license = "MIT"
+description = "From forms to your structs"
+
+[dependencies]
+# ff_macro = { path = "../macro" }
+ff_macro = "*"

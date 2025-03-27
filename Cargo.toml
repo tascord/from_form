@@ -1,15 +1,5 @@
-[package]
-name = "from_form"
-version = "0.1.5"
-edition = "2021"
-repository = "https://github.com/tascord/from_form"
-homepage = "https://github.com/tascord/from_form"
-license = "MIT"
-description = "TryFrom impl HashMap<String,String> -> Struct"
-
-[lib]
-proc-macro = true
-
-[dependencies]
-quote = "1.0.35"
-syn = "2.0.52"
+[workspace]
+resolver = "2"
+members = [ "lib",
+    "macro"
+]

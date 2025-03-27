@@ -78,7 +78,7 @@ mod tests {
 
         let signup = Signup::try_from(form_data);
         assert!(signup.is_ok());
-        assert_eq!(Signup::len(), 4);
+        assert_eq!(Signup::COLUMNS.len(), 4);
 
         println!("{:?}", signup.unwrap());
     }
@@ -103,6 +103,7 @@ mod tests {
         println!("{:?}", signup.unwrap());
     }
 
+    #[allow(dead_code)]
     #[derive(Debug)]
     struct FStrType(i8);
     impl std::str::FromStr for FStrType {
