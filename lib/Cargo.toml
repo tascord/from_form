@@ -9,4 +9,4 @@ description = "From forms to your structs"
 
 [dependencies]
 # ff_macro = { path = "../macro" }
-ff_macro = "*"
+ff_macro = "0.2.0"
