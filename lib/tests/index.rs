@@ -60,6 +60,7 @@ mod tests {
 
     #[allow(dead_code)]
     #[derive(FromForm, Debug)]
+    #[ff(crate = "from_form")]
     struct Signup {
         email: Email,
         #[rename("handle")]

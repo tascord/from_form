@@ -1,14 +1,57 @@
+use std::collections::HashMap;
+
 use proc_macro::TokenStream;
-use quote::quote;
-use syn::{parse_macro_input, DeriveInput, LitStr};
+use quote::{quote, ToTokens};
+use syn::{parse::Parse, parse_macro_input, parse_str, DeriveInput, Ident, LitStr, Token};
 
 mod helpers;
 use helpers::*;
 
-#[proc_macro_derive(FromForm, attributes(from_str, rename))]
-pub fn ff_derive(input: TokenStream) -> TokenStream {
-    let (_, name, data) = preamble(parse_macro_input!(input as DeriveInput));
+#[allow(dead_code)]
+struct KV {
+    key: String,
+    eq_token: Token![=],
+    value: LitStr,
+}
 
+impl Parse for KV {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        Ok(KV {
+            key: {
+                match input.parse::<Ident>() {
+                    Ok(v) => v.to_string(),
+                    Err(_) => input.parse::<Token![crate]>().unwrap().to_token_stream().to_string(),
+                }
+            },
+            eq_token: input.parse()?,
+            value: input.parse()?,
+        })
+    }
+}
+
+#[proc_macro_derive(FromForm, attributes(from_str, rename, ff))]
+pub fn ff_derive(input: TokenStream) -> TokenStream {
+    let (cont, name, data) = preamble(parse_macro_input!(input as DeriveInput));
+
+    let attrs = cont
+        .attrs
+        .into_iter()
+        .filter(|v| {
+            v.path()
+                .get_ident()
+                .map(|v| v.to_string() == "ff")
+                .unwrap_or(false)
+        })
+        .map(|v| v.parse_args::<KV>().unwrap())
+        .map(|v| (v.key.to_string(), v.value.value()))
+        .collect::<HashMap<String, String>>();
+
+    let crate_path = attrs
+        .get("path")
+        .cloned()
+        .unwrap_or("::from_form".to_string());
+
+    let crate_path = parse_str::<syn::Path>(&crate_path).unwrap();
     let fields = data.fields.into_iter();
     let fields_str = fields
         .clone()
@@ -72,7 +115,7 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
             }
         }
 
-        impl ::from_form::FromForm for #name {
+        impl #crate_path::FromForm for #name {
             const COLUMNS: &'static [&'static str] = &[ #(#fields_str),* ];
         }
 
