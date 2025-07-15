@@ -4,7 +4,17 @@ version = 4
 
 [[package]]
 name = "ff_macro"
-version = "0.2.1"
+version = "0.2.2"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "ff_macro"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5cee4b6b698d60356a358f1b6d6c9134b27db55d259ad7aac907b86caff24ed"
 dependencies = [
  "quote",
  "syn",
@@ -12,9 +22,9 @@ dependencies = [
 
 [[package]]
 name = "from_form"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
- "ff_macro",
+ "ff_macro 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

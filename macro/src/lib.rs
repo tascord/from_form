@@ -115,6 +115,39 @@ pub fn ff_derive(input: TokenStream) -> TokenStream {
             }
         }
 
+        impl TryFrom<::std::collections::HashMap<::std::sync::Arc<str>,::std::sync::Arc<str>>> for #name {
+            type Error = String;
+            fn try_from(form_data: ::std::collections::HashMap<::std::sync::Arc<str>,::std::sync::Arc<str>>) -> Result<Self, Self::Error> {
+                Ok({
+                    use ::std::str::FromStr as _;
+                    #name {
+                        #(
+                            #ss_field: <#ss_type>::try_from(
+                                form_data.get(#ss_name).map(|v| v.as_ref()).ok_or_else(|| format!("{} not found", #ss_name))?.to_string()
+                            ).map_err(|e| format!("{:?}", e))?,
+                        )*
+                        #(
+                            #so_field: match form_data.get(#so_name).map(|v| v.as_ref()).ok_or_else(|| format!("{} not found", #so_name))?.to_string().is_empty() {
+                                false => Some(<#so_type>::try_from(form_data.get(#so_name).map(|v| v.as_ref()).unwrap().to_string()).map_err(|e| format!("{:?}", e))?),
+                                true => None,
+                            },
+                        )*
+                        #(
+                            #nss_field: <#nss_type>::from_str(
+                                form_data.get(#nss_name).map(|v| v.as_ref()).ok_or_else(|| format!("{} not found", #nss_name))?
+                            ).map_err(|e| format!("{:?}", e))?,
+                        )*
+                        #(
+                            #nso_field: match form_data.get(#nso_name).map(|v| v.as_ref()).ok_or_else(|| format!("{} not found", #nso_name))?.to_string().is_empty() {
+                                false => Some(<#nso_type>::from_str(form_data.get(#nso_name).map(|v| v.as_ref()).unwrap()).map_err(|e| format!("{:?}", e))?),
+                                true => None,
+                            },
+                        )*
+                    }
+                })
+            }
+        }
+
         impl #crate_path::FromForm for #name {
             const COLUMNS: &'static [&'static str] = &[ #(#fields_str),* ];
         }

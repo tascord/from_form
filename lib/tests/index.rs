@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
+    use std::{collections::HashMap, sync::Arc};
 
     use from_form::*;
 
@@ -76,6 +76,21 @@ mod tests {
         form_data.insert("handle".to_string(), "imflo".to_string());
         form_data.insert("password".to_string(), "password".to_string());
         form_data.insert("secret".to_string(), "secret".to_string());
+
+        let signup = Signup::try_from(form_data);
+        assert!(signup.is_ok());
+        assert_eq!(Signup::COLUMNS.len(), 4);
+
+        println!("{:?}", signup.unwrap());
+    }
+
+    #[test]
+    fn arc_str() {
+        let mut form_data: HashMap<Arc<str>, Arc<str>> = HashMap::<Arc<str>, Arc<str>>::new();
+        form_data.insert("email".into(), "imflo.pink@gmail.com".into());
+        form_data.insert("handle".into(), "imflo".into());
+        form_data.insert("password".into(), "password".into());
+        form_data.insert("secret".into(), "secret".into());
 
         let signup = Signup::try_from(form_data);
         assert!(signup.is_ok());
